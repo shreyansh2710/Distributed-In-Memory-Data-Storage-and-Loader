@@ -1,7 +1,5 @@
 # Distributed-In-Memory-Data-Storage-and-Loader
 
-# Distributed In-Memory Key-Value Storage & Loading System
-
 A highly performant, modular C++ implementation of a distributed key-value storage and processing cluster. The system partitions data using standard consistent routing methods, allowing cluster nodes to ingest local file shards concurrently while routing records to their deterministic owner nodes over a simulated low-latency network mesh.
 
 ---
