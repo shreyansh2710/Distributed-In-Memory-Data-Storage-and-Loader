@@ -1,0 +1,10 @@
+# Ignore the entire build directory where binaries are compiled
+build/
+
+# Ignore any local test data files generated during runs
+*.csv
+
+# Ignore IDE specific files
+.vscode/
+.idea/
+.DS_Store
