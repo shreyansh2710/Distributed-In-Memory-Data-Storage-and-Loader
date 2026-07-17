@@ -1,34 +1,26 @@
+#include "ConfigParser.hpp"
 #include "ClusterCoordinator.hpp"
-#include <fstream>
 #include <iostream>
-
-void create_mock_file(const std::string& path, const std::vector<std::pair<std::string, std::string>>& items) {
-    std::ofstream f(path);
-    for (const auto& [k, v] : items) {
-        f << k << "," << v << "\n";
-    }
-}
+#include <chrono>
 
 int main() {
-    create_mock_file("node0_data.csv", { {"usr_10", "Alice"}, {"usr_22", "Bob"}, {"usr_03", "Charlie"} });
-    create_mock_file("node1_data.csv", { {"usr_94", "David"}, {"usr_45", "Eve"}, {"usr_12", "Frank"} });
-    create_mock_file("node2_data.csv", { {"usr_87", "Grace"}, {"usr_33", "Heidi"}, {"usr_01", "Ivan"} });
+    auto start_time = std::chrono::high_resolution_clock::now();
 
-    std::vector<int> node_ids = {0, 1, 2};
-    ClusterCoordinator cluster(node_ids);
+    ConfigParser config("config.txt");
+    ClusterCoordinator cluster(config);
 
-    std::unordered_map<int, std::string> node_file_maps = {
-        {0, "node0_data.csv"},
-        {1, "node1_data.csv"},
-        {2, "node2_data.csv"}
-    };
+    // Collect list of generated large mock data files
+    std::vector<std::string> mock_files;
+    for(int i = 0; i < config.get_node_count(); ++i) {
+        mock_files.push_back("mock_node_" + std::to_string(i) + "_data.csv");
+    }
 
-    cluster.run_distributed_load(node_file_maps);
-    cluster.print_cluster_metrics();
+    cluster.execute_parallel_load(mock_files);
+    cluster.show_cluster_diagnostics();
 
-    std::remove("node0_data.csv");
-    std::remove("node1_data.csv");
-    std::remove("node2_data.csv");
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+    std::cout << "\n[Perf Trace] Complete Cluster Execution Duration: " << duration << " ms\n";
 
     return 0;
 }
