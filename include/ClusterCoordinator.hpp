@@ -3,19 +3,21 @@
 
 #include "StorageNode.hpp"
 #include "StorageRouter.hpp"
+#include "ConfigParser.hpp"
 #include <vector>
-#include <unordered_map>
 #include <memory>
+#include <string>
 
 class ClusterCoordinator {
 public:
-    explicit ClusterCoordinator(const std::vector<int>& node_ids);
-    void run_distributed_load(const std::unordered_map<int, std::string>& node_file_maps);
-    void print_cluster_metrics() const;
+    explicit ClusterCoordinator(const ConfigParser& config);
+    void execute_parallel_load(const std::vector<std::string>& files);
+    void show_cluster_diagnostics() const;
 
 private:
+    int total_nodes;
     std::shared_ptr<StorageRouter> router;
-    std::unordered_map<int, std::unique_ptr<StorageNode>> nodes;
+    std::vector<std::unique_ptr<StorageNode>> nodes;
 };
 
 #endif
