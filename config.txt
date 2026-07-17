@@ -1,0 +1,7 @@
+# Cluster Configuration
+nodes=4
+
+# Schema Definitions (Supported types: string, int32)
+field=id,string
+field=age,int32
+field=score,int32
